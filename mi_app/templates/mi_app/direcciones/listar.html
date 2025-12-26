@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Direcciones de {{ cliente.nombre }}</title>
+</head>
+<body>
+
+<h1>Direcciones de {{ cliente.nombre }}</h1>
+
+<a href="{% url 'dashboard' %}">← Volver al dashboard</a>
+<br><br>
+
+<a href="{% url 'agregar_direccion' cliente.id %}">
+    Agregar nueva dirección
+</a>
+
+<hr>
+
+{% if direcciones %}
+    <ul>
+        {% for direccion in direcciones %}
+            <li>
+                <strong>{{ direccion.sector }}</strong><br>
+
+                {% if direccion.provincia %}
+                    Provincia: {{ direccion.provincia }}<br>
+                {% endif %}
+
+                {% if direccion.municipio %}
+                    Municipio: {{ direccion.municipio }}<br>
+                {% endif %}
+
+                {% if direccion.calle %}
+                    Calle: {{ direccion.calle }}<br>
+                {% endif %}
+
+                {% if direccion.numero_casa %}
+                    No. Casa: {{ direccion.numero_casa }}<br>
+                {% endif %}
+
+                {% if direccion.nombre_residencial %}
+                    Residencial: {{ direccion.nombre_residencial }}<br>
+                {% endif %}
+
+                {% if direccion.manzana %}
+                    Manzana: {{ direccion.manzana }}<br>
+                {% endif %}
+
+                {% if direccion.nombre_edificio %}
+                    Edificio: {{ direccion.nombre_edificio }}<br>
+                {% endif %}
+
+                {% if direccion.piso %}
+                    Piso: {{ direccion.piso }}<br>
+                {% endif %}
+
+                {% if direccion.apartamento %}
+                    Apartamento: {{ direccion.apartamento }}<br>
+                {% endif %}
+
+                {% if direccion.referencia %}
+                    Referencia: {{ direccion.referencia }}<br>
+                {% endif %}
+
+                {% if direccion.notas %}
+                    <em>Notas: {{ direccion.notas }}</em><br>
+                {% endif %}
+
+                <br>
+                <a href="{% url 'editar_direccion' direccion.id %}">Editar</a>
+                |
+                <a href="{% url 'eliminar_direccion' direccion.id %}">Eliminar</a>
+            </li>
+            <hr>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Este cliente no tiene direcciones registradas.</p>
+{% endif %}
+
+</body>
+</html>

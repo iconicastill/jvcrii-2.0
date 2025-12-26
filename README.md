@@ -43,3 +43,13 @@ Se creó una vista básica para pruebas
 
 Notas
 Los archivos generados automáticamente por Python, la base de datos local y el entorno virtual no se suben al repositorio.
+
+Aquí los comandos, solo las líneas, en el orden correcto:
+
+source venv/bin/activate
+
+python manage.py makemigrations
+
+python manage.py migrate
+
+python manage.py runserver

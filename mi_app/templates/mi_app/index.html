@@ -1,0 +1,47 @@
+<h1>CRM - Clientes</h1>
+
+{% if messages %}
+<ul>
+    {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<a href="{% url 'agregar_cliente' %}">Agregar cliente</a>
+
+<br><br>
+
+<form method="get">
+    <input
+        type="text"
+        name="q"
+        placeholder="Buscar por nombre o email"
+        value="{{ query }}"
+    >
+    <button type="submit">Buscar</button>
+
+    {% if query %}
+        <p>Resultados para: "{{ query }}"</p>
+    {% endif %}
+</form>
+
+<ul>
+{% for cliente in clientes %}
+    <li>
+        {{ cliente.nombre }} - {{ cliente.email }} - {{ cliente.telefono }}
+
+        | <a href="{% url 'editar_cliente' cliente.id %}">Editar</a>
+        | <a href="{% url 'eliminar_cliente' cliente.id %}">Eliminar</a>
+        | <a href="{% url 'listar_direcciones' cliente.id %}">Direcciones</a>
+    </li>
+{% empty %}
+    {% if query %}
+        <li>No se encontraron resultados.</li>
+    {% else %}
+        <li>No hay clientes registrados.</li>
+    {% endif %}
+{% endfor %}
+</ul>
+
+<p>Total de clientes registrados: {{ total_clientes }}</p>

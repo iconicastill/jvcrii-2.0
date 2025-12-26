@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar dirección</title>
+</head>
+<body>
+
+<h1>Agregar dirección</h1>
+<p>Cliente: <strong>{{ cliente.nombre }}</strong></p>
+
+<a href="{% url 'listar_direcciones' cliente.id %}">
+    ← Volver a direcciones
+</a>
+
+<P>No es necesario completar todos los campos, solo los que apliquen a su tipo de vivienda y direccion.</P>
+
+<hr>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">Guardar dirección</button>
+</form>
+
+</body>
+</html>

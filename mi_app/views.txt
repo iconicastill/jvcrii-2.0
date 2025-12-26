@@ -1,0 +1,3 @@
+def dashboard(request):
+    clientes = Cliente.objects.all()
+    return render(request, 'mi_app/index.html', {'clientes': clientes})

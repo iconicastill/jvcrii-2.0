@@ -1,24 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Cliente, Direccion
+from .models import Cliente, Direccion, Producto
 from django import forms
-from .forms import DireccionForm
+from .forms import ClienteForm, DireccionForm, ProductoForm
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
-
 # Create your views here.
-
-class ClienteForm(forms.ModelForm):
-    class Meta:
-        model = Cliente
-        fields = ['nombre', 'email', 'telefono']
-
-class DireccionForm(forms.ModelForm):
-    class Meta:
-        model = Direccion
-        exclude = ['cliente', 'creado_en']
-
 def dashboard(request):
     query = request.GET.get('q', '')
 
@@ -32,7 +20,7 @@ def dashboard(request):
 
     total_clientes = Cliente.objects.count()
 
-    return render(request, 'mi_app/index.html', {
+    return render(request, 'mi_app/clientes/listar.html', {
         'clientes': clientes,
         'query': query,
         'total_clientes': total_clientes
@@ -60,7 +48,7 @@ def agregar_cliente(request):
     else:
         form = ClienteForm()
 
-    return render(request, 'mi_app/agregar_cliente.html', {'form': form})
+    return render(request, 'mi_app/clientes/agregar.html', {'form': form})
 
 @login_required
 def editar_cliente(request, cliente_id):
@@ -77,7 +65,7 @@ def editar_cliente(request, cliente_id):
     else:
         form = ClienteForm(instance=cliente)
 
-    return render(request, 'mi_app/editar_cliente.html', {
+    return render(request, 'mi_app/clientes/editar.html', {
         'form': form,
         'cliente': cliente
     })
@@ -95,7 +83,7 @@ def eliminar_cliente(request, cliente_id):
             messages.error(request, "Ocurrió un error al eliminar el cliente")
             return redirect('dashboard')
 
-    return render(request, 'mi_app/eliminar_cliente.html', {
+    return render(request, 'mi_app/clientes/eliminar.html', {
         'cliente': cliente
     })
 
@@ -153,4 +141,53 @@ def eliminar_direccion(request, direccion_id):
 
     return render(request, 'mi_app/direcciones/eliminar.html', {
         'direccion': direccion
+    })
+
+def listar_productos(request):
+    productos = Producto.objects.all()
+    return render(request, 'mi_app/productos/listar.html', {
+        'productos': productos
+    })
+
+
+def agregar_producto(request):
+    if request.method == 'POST':
+        form = ProductoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('listar_productos')
+    else:
+        form = ProductoForm()
+
+    return render(request, 'mi_app/productos/agregar.html', {
+        'form': form
+    })
+
+
+def editar_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+
+    if request.method == 'POST':
+        form = ProductoForm(request.POST, instance=producto)
+        if form.is_valid():
+            form.save()
+            return redirect('listar_productos')
+    else:
+        form = ProductoForm(instance=producto)
+
+    return render(request, 'mi_app/productos/editar.html', {
+        'form': form,
+        'producto': producto
+    })
+
+
+def eliminar_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+
+    if request.method == 'POST':
+        producto.delete()
+        return redirect('listar_productos')
+
+    return render(request, 'mi_app/productos/eliminar.html', {
+        'producto': producto
     })

@@ -46,6 +46,8 @@ Los archivos generados automáticamente por Python, la base de datos local y el 
 
 Aquí los comandos, solo las líneas, en el orden correcto:
 
+#--------------------------
+
 source venv/bin/activate
 
 python manage.py makemigrations
@@ -53,3 +55,17 @@ python manage.py makemigrations
 python manage.py migrate
 
 python manage.py runserver
+
+#--------------------------
+
+git status - Ver los cambios pendientes por aplicar.
+
+git add . - Agregar archivos a preparacion. 
+
+git commit -m "mensaje" - Detalles de los cambios.
+
+git remote -v - Verificar repositorio conectado.
+
+git pull - Traer desde el repositorio.
+
+git push origin main - Ambiar al repositorio, en este caso rama principal.

@@ -1,5 +1,14 @@
 from django import forms
-from .models import Direccion
+from .models import Direccion, Cliente, Producto
+
+class ClienteForm(forms.ModelForm):
+    class Meta:
+        model = Cliente
+        fields = [
+            'nombre', 
+            'email', 
+            'telefono'
+        ]
 
 class DireccionForm(forms.ModelForm):
     class Meta:
@@ -17,4 +26,16 @@ class DireccionForm(forms.ModelForm):
             'apartamento',
             'referencia',
             'notas',
+        ]
+
+class ProductoForm(forms.ModelForm):
+    class Meta:
+        model = Producto
+        fields = [
+            'nombre',
+            'codigo',
+            'descripcion',
+            'precio',
+            'stock',
+            'activo',
         ]

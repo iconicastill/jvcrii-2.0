@@ -10,9 +10,15 @@
 <ul>
 {% for producto in productos %}
     <li>
-        {{ producto.nombre }} - {{ producto.codigo }} |
-        RD$ {{ producto.precio }} |
-        Stock: {{ producto.stock }}
+        <strong>{{ producto.nombre }}</strong> ({{ producto.codigo }}) |
+        RD$ {{ producto.precio }}
+
+        {% if producto.tipo == 'fisico' %}
+            | Stock:
+            {{ producto.inventario.cantidad|default:"0" }}
+        {% else %}
+            | Servicio
+        {% endif %}
 
         <a href="{% url 'editar_producto' producto.id %}">Editar</a>
         <a href="{% url 'eliminar_producto' producto.id %}">Eliminar</a>

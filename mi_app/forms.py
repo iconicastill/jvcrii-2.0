@@ -1,5 +1,5 @@
 from django import forms
-from .models import Direccion, Cliente, Producto
+from .models import Direccion, Cliente, Producto, Inventario
 
 class ClienteForm(forms.ModelForm):
     class Meta:
@@ -36,6 +36,12 @@ class ProductoForm(forms.ModelForm):
             'codigo',
             'descripcion',
             'precio',
-            'stock',
+            'tipo',
             'activo',
         ]
+
+class InventarioForm(forms.ModelForm):
+    class Meta:
+        model = Inventario
+        fields = ['cantidad']
+

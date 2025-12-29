@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Cliente, Direccion, Producto
 from django import forms
-from .forms import ClienteForm, DireccionForm, ProductoForm
+from .forms import ClienteForm, DireccionForm, ProductoForm, InventarioForm
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -149,38 +149,88 @@ def listar_productos(request):
         'productos': productos
     })
 
-
+@login_required
 def agregar_producto(request):
     if request.method == 'POST':
-        form = ProductoForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('listar_productos')
-    else:
-        form = ProductoForm()
+        producto_form = ProductoForm(request.POST)
+        inventario_form = InventarioForm(request.POST)
 
-    return render(request, 'mi_app/productos/agregar.html', {
-        'form': form
+        if producto_form.is_valid():
+            producto = producto_form.save()
+
+            if producto.tipo == 'fisico' and inventario_form.is_valid():
+                inventario = inventario_form.save(commit=False)
+                inventario.producto = producto
+                inventario.save()
+
+            return redirect('listar_productos')
+
+    else:
+        producto_form = ProductoForm()
+        inventario_form = InventarioForm()
+
+    mostrar_inventario = request.POST.get('tipo') == 'fisico'
+
+    return render(request, 'productos/form.html', {
+        'producto_form': producto_form,
+        'inventario_form': inventario_form,
+        'mostrar_inventario': mostrar_inventario,
     })
 
-
+    
+@login_required
 def editar_producto(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
 
-    if request.method == 'POST':
-        form = ProductoForm(request.POST, instance=producto)
-        if form.is_valid():
-            form.save()
-            return redirect('listar_productos')
-    else:
-        form = ProductoForm(instance=producto)
+    inventario = getattr(producto, 'inventario', None)
 
-    return render(request, 'mi_app/productos/editar.html', {
-        'form': form,
-        'producto': producto
+    if request.method == 'POST':
+
+        print(request.POST)  # 👈 AQUÍ
+
+        producto_form = ProductoForm(request.POST, instance=producto)
+        inventario_form = InventarioForm(
+            request.POST,
+            instance=inventario
+        )
+
+        if producto_form.is_valid() and (
+            producto.tipo != 'fisico' or inventario_form.is_valid()
+        ):
+            
+            producto = producto_form.save()
+
+            if producto.tipo == 'fisico':
+                    inv = inventario_form.save(commit=False)
+                    inv.producto = producto
+                    inv.save()
+            else:
+                # Si pasó de físico a servicio → eliminar inventario
+                if inventario:
+                    inventario.delete()
+
+            return redirect('listar_productos')
+
+    else:
+        producto_form = ProductoForm(instance=producto)
+        inventario_form = InventarioForm(instance=inventario)
+
+    mostrar_inventario = (
+        producto_form.instance.tipo == 'fisico'
+        or request.POST.get('tipo') == 'fisico'
+    )
+
+    return render(request, 'mi_app/productos/form.html', {
+        'producto_form': producto_form,
+        'inventario_form': inventario_form,
+        'producto': producto,
+        'mostrar_inventario': mostrar_inventario,
     })
 
+    
 
+
+@login_required
 def eliminar_producto(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
 
@@ -191,3 +241,4 @@ def eliminar_producto(request, producto_id):
     return render(request, 'mi_app/productos/eliminar.html', {
         'producto': producto
     })
+

@@ -43,15 +43,18 @@ class Direccion(models.Model):
     def __str__(self):
         return f"{self.sector} - {self.nombre_residencial or 'Sin residencial'}"
 
-from django.db import models
-
 class Producto(models.Model):
+    TIPO_CHOICES = [
+        ('fisico', 'Físico'),
+        ('servicio', 'Servicio'),
+    ]
+
     nombre = models.CharField(max_length=150)
     codigo = models.CharField(max_length=50, unique=True)
     descripcion = models.TextField(blank=True)
 
     precio = models.DecimalField(max_digits=10, decimal_places=2)
-    stock = models.PositiveIntegerField(default=0)
+    tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
 
     activo = models.BooleanField(default=True)
 
@@ -60,3 +63,17 @@ class Producto(models.Model):
 
     def __str__(self):
         return f"{self.nombre} ({self.codigo})"
+    
+class Inventario(models.Model):
+    producto = models.OneToOneField(
+        Producto,
+        on_delete=models.CASCADE,
+        related_name='inventario'
+    )
+
+    cantidad = models.PositiveIntegerField()
+    actualizado = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.producto.nombre} - {self.cantidad}"
+

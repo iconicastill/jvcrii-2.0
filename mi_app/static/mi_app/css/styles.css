@@ -24,7 +24,7 @@ h1 {
 }
 p {
     font-size: 16px;
-    line-height: 1.5;
+    line-height: 1.25;
     font-weight: normal;
 }
 a {
@@ -45,13 +45,19 @@ footer {
     width: 100%;
     bottom: 0;
 }
-button {
+button, .btn {
     background-color: #4CAF50;
     color: white;
     border: none;
     padding: 10px 20px;
     cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 5px 2px;
 }
+
 button:hover {
     background-color: #45a049;
 }
@@ -72,11 +78,12 @@ label {
     margin-bottom: 5px;
 }
 input[type="text"], input[type="password"], input[type="email"] {
-    width: 50%;
+    width: 25%;
     padding: 10px;
     margin: 5px 0 10px 0;
     border: 1px solid #ccc;
     box-sizing: border-box;
+    min-width: 300px;
 }
 input[type="submit"] {
     background-color: #4CAF50;
@@ -101,4 +108,22 @@ input[type="submit"]:hover {
     background-color: #f44336;
     color: white;
     margin-bottom: 20px;
+}
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+li {
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+}
+textarea {
+    width: 25%;
+    height: 100px;
+    padding: 10px;
+    margin: 5px 0 10px 0;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    resize: vertical;
+    min-width: 300px;
 }

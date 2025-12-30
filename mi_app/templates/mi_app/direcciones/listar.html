@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Direcciones de {{ cliente.nombre }}</title>
-</head>
-<body>
+{% extends "mi_app/base.html" %}
+
+{% block title %}Listado de direcciones{% endblock %}
+
+{% block content %}
 
 <h1>Direcciones de {{ cliente.nombre }}</h1>
 
@@ -79,5 +77,4 @@
     <p>Este cliente no tiene direcciones registradas.</p>
 {% endif %}
 
-</body>
-</html>
+{% endblock %}

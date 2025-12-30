@@ -48,7 +48,10 @@ def agregar_cliente(request):
     else:
         form = ClienteForm()
 
-    return render(request, 'mi_app/clientes/agregar.html', {'form': form})
+    return render(request, 'mi_app/clientes/form.html', {
+        'form': form,
+        'titulo': 'Agregar cliente'
+    })
 
 @login_required
 def editar_cliente(request, cliente_id):
@@ -65,8 +68,9 @@ def editar_cliente(request, cliente_id):
     else:
         form = ClienteForm(instance=cliente)
 
-    return render(request, 'mi_app/clientes/editar.html', {
+    return render(request, 'mi_app/clientes/form.html', {
         'form': form,
+        'titulo': 'Editar cliente',
         'cliente': cliente
     })
 
@@ -102,9 +106,10 @@ def agregar_direccion(request, cliente_id):
     else:
         form = DireccionForm()
 
-    return render(request, 'mi_app/direcciones/agregar.html', {
+    return render(request, 'mi_app/direcciones/form.html', {
         'form': form,
-        'cliente': cliente
+        'cliente': cliente,
+        'titulo': 'Agregar dirección'
     })
 
 @login_required
@@ -123,10 +128,11 @@ def editar_direccion(request, direccion_id):
     else:
         form = DireccionForm(instance=direccion)
 
-    return render(request, 'mi_app/direcciones/editar.html', {
+    return render(request, 'mi_app/direcciones/form.html', {
         'form': form,
         'direccion': direccion,
-        'cliente': cliente
+        'cliente': cliente,
+        'titulo': 'Editar dirección'
     })
 
 @login_required
@@ -143,10 +149,22 @@ def eliminar_direccion(request, direccion_id):
         'direccion': direccion
     })
 
+@login_required
 def listar_productos(request):
+    query = request.GET.get('q', '')
+
     productos = Producto.objects.all()
+
+    if query:
+        productos = productos.filter(
+            Q(nombre__icontains=query) |
+            Q(codigo__icontains=query) |
+            Q(descripcion__icontains=query)
+        )
+
     return render(request, 'mi_app/productos/listar.html', {
-        'productos': productos
+        'productos': productos,
+        'query': query
     })
 
 @login_required
@@ -171,10 +189,11 @@ def agregar_producto(request):
 
     mostrar_inventario = request.POST.get('tipo') == 'fisico'
 
-    return render(request, 'productos/form.html', {
+    return render(request, 'mi_app/productos/form.html', {
         'producto_form': producto_form,
         'inventario_form': inventario_form,
         'mostrar_inventario': mostrar_inventario,
+        'titulo': 'Agregar producto'
     })
 
     
@@ -225,6 +244,7 @@ def editar_producto(request, producto_id):
         'inventario_form': inventario_form,
         'producto': producto,
         'mostrar_inventario': mostrar_inventario,
+        'titulo': 'Editar producto'
     })
 
     

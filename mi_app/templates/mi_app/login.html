@@ -1,3 +1,9 @@
+{% extends "mi_app/base.html" %}
+
+{% block title %}Iniciar sesión{% endblock %}
+
+{% block content %}
+
 <h1>Iniciar sesión</h1>
 
 <form method="post">
@@ -9,3 +15,5 @@
 {% if form.errors %}
 <p>Usuario o contraseña incorrectos</p>
 {% endif %}
+
+{% endblock %}

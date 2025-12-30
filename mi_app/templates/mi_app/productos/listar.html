@@ -1,3 +1,9 @@
+{% extends "mi_app/base.html" %}
+
+{% block title %}Listado de Productos{% endblock %}
+
+{% block content %}
+
 <h1>Productos</h1>
 
 <a href="{% url 'dashboard' %}">← Volver al dashboard</a>
@@ -7,10 +13,30 @@
 
 <hr>
 
+<form method="get">
+    <input
+        type="text"
+        name="q"
+        placeholder="Buscar producto..."
+        value="{{ query }}"
+    >
+    <button type="submit">Buscar</button>
+</form>
+
 <ul>
 {% for producto in productos %}
     <li>
-        <strong>{{ producto.nombre }}</strong> ({{ producto.codigo }}) |
+        <strong>
+            <a href="#"
+                onclick="mostrarProducto(
+                        '{{ producto.nombre|escapejs }}',
+                        '{{ producto.descripcion|escapejs }}'
+                )">
+                {{ producto.nombre }}
+            </a>
+        </strong> 
+        
+            ({{ producto.codigo }}) |
         RD$ {{ producto.precio }}
 
         {% if producto.tipo == 'fisico' %}
@@ -27,3 +53,14 @@
     <li>No hay productos registrados</li>
 {% endfor %}
 </ul>
+
+<div id="producto-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
+    <div style="background:white; width:400px; margin:10% auto; padding:20px; border-radius:8px;">
+        <h3 id="modal-nombre"></h3>
+        <p id="modal-descripcion"></p>
+
+        <button onclick="cerrarModal()">Cerrar</button>
+    </div>
+</div>
+
+{% endblock %}

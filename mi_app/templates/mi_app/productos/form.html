@@ -1,3 +1,9 @@
+{% extends "mi_app/base.html" %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+
 <h1>{{ titulo }}</h1>
 
 <form method="post">
@@ -15,3 +21,4 @@
 </form>
 
 <a href="{% url 'listar_productos' %}">Volver</a>
+{% endblock %}

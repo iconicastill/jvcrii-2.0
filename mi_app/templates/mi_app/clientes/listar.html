@@ -1,3 +1,9 @@
+{% extends "mi_app/base.html" %}
+
+{% block title %}Listado de Clientes{% endblock %}
+
+{% block content %}
+
 <h1>CRM - Clientes</h1>
 
 {% if messages %}
@@ -48,3 +54,5 @@
 </ul>
 
 <p>Total de clientes registrados: {{ total_clientes }}</p>
+
+{% endblock %}

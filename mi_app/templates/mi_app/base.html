@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Mi aplicación{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'mi_app/css/styles.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<header>
+    {% block header %}{% endblock %}
+</header>
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<script src="{% static 'mi_app/js/productos.js' %}"></script>
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,80 @@
+form {
+    margin-top: 20px;
+}
+
+label {
+    display: block;
+}
+
+input[type="text"], input[type="password"], input[type="email"], input[type="number"], select {
+    width: 25%;
+    padding: 10px;
+    margin: 5px 0 10px 0;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    min-width: 300px;
+    border-radius: 4px;
+}
+
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+input#id_activo[type="checkbox"] {
+	width: 26px;
+	height: 26px;
+    margin: 10px 0 10px 0;
+}
+
+textarea {
+    width: 25%;
+    height: 100px;
+    padding: 10px;
+    margin: 5px 0 10px 0;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    resize: vertical;
+    min-width: 300px;
+    border-radius: 4px;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+.success {
+    color: green;
+    font-weight: bold;
+}
+
+.alert {
+    padding: 15px;
+    background-color: #f44336;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.form-column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+input, select, textarea {
+    box-sizing: border-box;
+}

@@ -18,11 +18,34 @@
 
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+
+    <div class="form-grid">
+
+        <!-- COLUMNA IZQUIERDA -->
+        <div class="form-column">
+            {{ form.provincia.label_tag }} {{ form.provincia }}
+            {{ form.municipio.label_tag }} {{ form.municipio }}
+            {{ form.sector.label_tag }} {{ form.sector }}
+            {{ form.calle.label_tag }} {{ form.calle }}
+            {{ form.numero_casa.label_tag }} {{ form.numero_casa }}
+            {{ form.nombre_residencial.label_tag }} {{ form.nombre_residencial }}
+            {{ form.manzana.label_tag }} {{ form.manzana }}
+        </div>
+
+        <!-- COLUMNA DERECHA -->
+        <div class="form-column">
+            {{ form.nombre_edificio.label_tag }} {{ form.nombre_edificio }}
+            {{ form.piso.label_tag }} {{ form.piso }}
+            {{ form.apartamento.label_tag }} {{ form.apartamento }}
+            {{ form.referencia.label_tag }} {{ form.referencia }}
+            {{ form.notas.label_tag }} {{ form.notas }}
+        </div>
+
+    </div>
 
     <button type="submit">Guardar dirección</button>
 </form>
 
-<a href="{% url 'dashboard' %}" class="btn">Volver</a>
+<a href="{% url 'listar_direcciones' cliente.id %}" class="btn">Volver</a>
 
 {% endblock %}

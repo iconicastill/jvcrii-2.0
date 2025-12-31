@@ -8,12 +8,19 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def dashboard(request):
-    query = request.GET.get('q', '')
+    total_clientes = Cliente.objects.count()
+    total_productos = Producto.objects.count()
 
+    return render(request, 'mi_app/dashboard.html', {
+        'total_productos': total_productos,
+    })
+
+def listar_clientes(request):
+    query = request.GET.get('q', '')
     clientes = Cliente.objects.prefetch_related('direcciones')
 
     if query:
-        clientes = Cliente.objects.filter(
+        clientes = clientes.filter(
             Q(nombre__icontains=query) |
             Q(email__icontains=query)
         )
@@ -23,7 +30,6 @@ def dashboard(request):
     return render(request, 'mi_app/clientes/listar.html', {
         'clientes': clientes,
         'query': query,
-        'total_clientes': total_clientes
     })
 
 def listar_direcciones(request, cliente_id):
@@ -149,7 +155,6 @@ def eliminar_direccion(request, direccion_id):
         'direccion': direccion
     })
 
-@login_required
 def listar_productos(request):
     query = request.GET.get('q', '')
 
@@ -261,4 +266,3 @@ def eliminar_producto(request, producto_id):
     return render(request, 'mi_app/productos/eliminar.html', {
         'producto': producto
     })
-

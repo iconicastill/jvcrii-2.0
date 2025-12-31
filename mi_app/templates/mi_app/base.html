@@ -9,20 +9,73 @@
     
     <title>{% block title %}Mi aplicación{% endblock %}</title>
 
-    <link rel="stylesheet" href="{% static 'mi_app/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'mi_app/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'mi_app/css/layout.css' %}">
+    <link rel="stylesheet" href="{% static 'mi_app/css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'mi_app/css/forms.css' %}">
+
     {% block extra_css %}{% endblock %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const darkModeActivo = localStorage.getItem('dark-mode') === 'true';
+
+            if (darkModeActivo) {
+            document.body.classList.add('dark-mode');
+            }
+
+            document.body.style.visibility = 'visible';
+        });
+    </script>
+
 </head>
 <body>
 
-<header>
-    {% block header %}{% endblock %}
+<header class="app-header">
+    {% block header %}
+    <!-- Header visual (logo, botones, etc.) -->
+    <h1>Panel principal</h1>
+    <button id="modoOscuro">🌙 Modo Oscuro</button>
+    {% endblock %}
 </header>
 
-<main>
-    {% block content %}{% endblock %}
-</main>
+<nav>
+    {% block nav %}
+    <!-- Navegación visual -->
+    <a href="{% url 'dashboard' %}">Inicio</a>
+    <a href="{% url 'listar_clientes' %}">Clientes</a>
+    <a href="{% url 'listar_productos' %}">Productos</a>
+    {% endblock %}
+</nav>
 
-<script src="{% static 'mi_app/js/productos.js' %}"></script>
+
+<div class="main-container">
+
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <aside>
+        {% block aside %}
+        <!-- Aside común o dinámico -->
+        <h3>Espacio publicitario:</h3> 
+        <center>
+            <h2>NEW WORLD</h2>
+            <p>Desarrollador y Diseñador Web profesional.</p>
+            <p>Total de clientes: {{ total_clientes }}</p>            
+        </center>
+        {% endblock %}
+    </aside>
+
+</div>
+
+<footer>
+    {% block footer %}
+    <p>&copy; 2025 iconicastill. By Nicolas Castillo Camacho</p>
+    {% endblock %}
+</footer>
+
+<script src="{% static 'mi_app/js/scripts.js' %}"></script>
 {% block extra_js %}{% endblock %}
 
 </body>

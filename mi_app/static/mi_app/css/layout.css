@@ -3,12 +3,21 @@ body {
 }
 
 body {
-    background-color: var(--main-bg-color);
+    /* background-color: var(--main-bg-color); */
     color: var(--main-text-color);
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
 }
+
+body {
+    background-image: url('/static/mi_app/images/background.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* opcional */
+}
+ 
 
 header.app-header {
     background-color: #005dff;
@@ -54,7 +63,7 @@ footer {
     color: #555555;
     text-align: center;
     padding: 10px 0;
-    position: fixed;
+    /* position: fixed; */
     width: 100%;
     bottom: 0;
 }

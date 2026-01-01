@@ -41,7 +41,7 @@
 
         {% if producto.tipo == 'fisico' %}
             | Stock:
-            {{ producto.inventario.cantidad|default:"0" }}
+            {{ producto.inventario.stock|default:"0" }}
         {% else %}
             | Servicio
         {% endif %}

@@ -46,6 +46,9 @@
     <a href="{% url 'dashboard' %}">Inicio</a>
     <a href="{% url 'listar_clientes' %}">Clientes</a>
     <a href="{% url 'listar_productos' %}">Productos</a>
+    <a href="{% url 'crear_factura' %}">Crear Factura</a>
+    <a href="{% url 'listar_borradores' %}">Facturas en Borrador</a>
+    <a href="{% url 'listar_facturas' %}">Facturas Emitidas</a>
     {% endblock %}
 </nav>
 
@@ -56,23 +59,41 @@
         {% block content %}{% endblock %}
     </div>
 
-    <aside>
-        {% block aside %}
-        <!-- Aside común o dinámico -->
-        <h3>Espacio publicitario:</h3> 
-        <center>
-            <h2>NEW WORLD</h2>
-            <p>Desarrollador y Diseñador Web profesional.</p>
-            <p>Total de clientes: {{ total_clientes }}</p>            
-        </center>
-        {% endblock %}
-    </aside>
+<aside>
+    {% block aside %}
+
+    {% if messages %}
+    <div class="aside-messages">
+        <ul>
+            {% for message in messages %}
+                <li class="message {{ message.tags }}">
+                    {{ message }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <hr>
+    {% endif %}
+
+    <!-- <h3>Espacio publicitario:</h3> 
+    <center>
+        <h2>NEW WORLD</h2>
+        <p>Desarrollador y Diseñador Web profesional.</p>
+        <p>Total de clientes: {{ total_clientes }}</p>            
+    </center> -->
+
+    {% endblock %}
+</aside>
+
 
 </div>
 
 <footer>
     {% block footer %}
-    <p>&copy; 2025 iconicastill. By Nicolas Castillo Camacho</p>
+    <p>&copy; 2025 
+        <a href="https://iconicastill.com/" target="_blank">iconicastill</a>. 
+        By Nicolas Castillo Camacho
+    </p>
     {% endblock %}
 </footer>
 

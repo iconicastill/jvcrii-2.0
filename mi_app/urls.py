@@ -21,4 +21,19 @@ urlpatterns = [
     path('productos/agregar/', views.agregar_producto, name='agregar_producto'),
     path('productos/<int:producto_id>/editar/', views.editar_producto, name='editar_producto'),
     path('productos/<int:producto_id>/eliminar/', views.eliminar_producto, name='eliminar_producto'),
+
+    # facturas
+    # path('facturas/', views.listar_facturas, name='listar_facturas'),
+    # path('facturas/agregar/', views.agregar_factura, name='agregar_factura'),
+    # path('facturas/<int:factura_id>/', views.ver_factura, name='ver_factura'),
+    # path('facturas/<int:factura_id>/editar/', views.editar_factura, name='editar_factura'),
+    # path('facturas/<int:factura_id>/eliminar/', views.eliminar_factura, name='eliminar_factura'),
+
+    path('facturas/crear/', views.crear_factura, name='crear_factura'),
+    path('facturas/<int:factura_id>/', views.detalle_factura, name='detalle_factura'),
+    path('facturas/<int:factura_id>/emitir/', views.emitir_factura, name='emitir_factura'),
+    path('facturas/borradores/', views.listar_borradores, name='listar_borradores'),
+    path('facturas/', views.listar_facturas, name='listar_facturas'),
+    path('facturas/<int:factura_id>/anular/', views.anular_factura, name='anular_factura'),
+
 ]

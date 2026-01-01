@@ -6,14 +6,6 @@
 
 <h1>CRM - Clientes</h1>
 
-{% if messages %}
-<ul>
-    {% for message in messages %}
-        <li class="{{ message.tags }}">{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
-
 <a href="{% url 'listar_productos' %}">Productos</a>
 <br><br>
 

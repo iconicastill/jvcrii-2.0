@@ -1,0 +1,43 @@
+{% extends "mi_app/base.html" %}
+
+{% block title %}Facturas{% endblock %}
+
+{% block content %}
+<h1>Facturas</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Número</th>
+            <th>Cliente</th>
+            <th>Estado</th>
+            <th>Total</th>
+            <th>Fecha</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for factura in facturas %}
+        <tr>
+            <td>{{ factura.numero }}</td>
+            <td>{{ factura.cliente.nombre }}</td>
+            <td>{{ factura.get_estado_display }}</td>
+            <td>${{ factura.total }}</td>
+            <td>{{ factura.creada|date:"d/m/Y H:i" }}</td>
+            <td>
+                <a href="{% url 'detalle_factura' factura.id %}">
+                    Ver
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">No hay facturas</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'dashboard' %}" class="btn">Volver</a>
+
+{% endblock %}

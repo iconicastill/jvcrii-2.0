@@ -1,10 +1,17 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Cliente, Direccion, Producto
-from django import forms
-from .forms import ClienteForm, DireccionForm, ProductoForm, InventarioForm
-from django.db.models import Q
+from .models import Cliente, Direccion, Producto, Factura, FacturaDetalle
+# from django import forms
+from .forms import ClienteForm, DireccionForm, ProductoForm, InventarioForm, FacturaForm, FacturaDetalleForm
+from django.db.models import Q, Sum
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from decimal import Decimal
+from django.db import transaction
+from django.utils import timezone
+from django.db.models import Max
+
+
+
 
 # Create your views here.
 def dashboard(request):
@@ -266,3 +273,146 @@ def eliminar_producto(request, producto_id):
     return render(request, 'mi_app/productos/eliminar.html', {
         'producto': producto
     })
+
+# Nuevo view para listar facturas
+
+@login_required
+def crear_factura(request):
+    if request.method == 'POST':
+        form = FacturaForm(request.POST)
+        if form.is_valid():
+            factura = form.save(commit=False)
+            factura.estado = 'borrador'
+            factura.numero = None  # importante
+            factura.save()
+            return redirect('detalle_factura', factura_id=factura.id)
+    else:
+        form = FacturaForm()
+
+    return render(request, 'mi_app/facturas/crear.html', {
+        'form': form
+    })
+
+
+@login_required
+def listar_borradores(request):
+    facturas = Factura.objects.filter(
+        estado='borrador'
+    ).order_by('-creada')
+
+    return render(request, 'mi_app/facturas/borradores.html', {
+        'facturas': facturas
+    })
+
+@login_required
+def detalle_factura(request, factura_id):
+    factura = get_object_or_404(Factura, id=factura_id)
+    detalles = factura.detalles.all()
+
+    if factura.estado != 'borrador':
+        form = None
+    else:
+        if request.method == 'POST':
+            form = FacturaDetalleForm(request.POST)
+            if form.is_valid():
+                detalle = form.save(commit=False)
+                detalle.factura = factura
+                detalle.save()
+                recalcular_factura(factura)
+                return redirect('detalle_factura', factura_id=factura.id)
+        else:
+            form = FacturaDetalleForm()
+
+    return render(request, 'mi_app/facturas/detalle_factura.html', {
+        'factura': factura,
+        'detalles': detalles,
+        'form': form
+    })
+
+
+def recalcular_factura(factura):
+    subtotal = factura.detalles.aggregate(
+        total=Sum('subtotal')
+    )['total'] or Decimal('0.00')
+
+    impuesto = subtotal * Decimal('0.18')
+    total = subtotal + impuesto
+
+    factura.subtotal = subtotal
+    factura.impuesto = impuesto
+    factura.total = total
+    factura.save()
+
+@transaction.atomic
+@login_required
+def emitir_factura(request, factura_id):
+    factura = get_object_or_404(Factura, id=factura_id)
+
+    if factura.estado != 'borrador':
+        return redirect('detalle_factura', factura_id=factura.id)
+
+    # Validar stock
+    for detalle in factura.detalles.select_related('producto'):
+        producto = detalle.producto
+        if producto.tipo == 'fisico':
+            inventario = producto.inventario
+            if inventario.stock < detalle.cantidad:
+                messages.error(
+                    request,
+                    f"Stock insuficiente para {producto.nombre}"
+                )
+                return redirect('detalle_factura', factura_id=factura.id)
+
+    # Descontar stock
+    for detalle in factura.detalles.select_related('producto'):
+        producto = detalle.producto
+        if producto.tipo == 'fisico':
+            inventario = producto.inventario
+            inventario.stock -= detalle.cantidad
+            inventario.save()
+
+    # Numerar y emitir
+    factura.numero = generar_numero_factura()
+    factura.estado = 'emitida'
+    factura.save()
+
+    messages.success(request, "Factura emitida correctamente")
+    return redirect('detalle_factura', factura_id=factura.id)
+
+def generar_numero_factura():
+    ultimo = Factura.objects.aggregate(
+        Max('numero')
+    )['numero__max']
+
+    return (ultimo or 0) + 1
+
+@login_required
+def listar_facturas(request):
+    facturas = Factura.objects.exclude(
+        estado='borrador'
+    ).order_by('-creada')
+
+    return render(request, 'mi_app/facturas/listar.html', {
+        'facturas': facturas
+    })
+
+@login_required
+@transaction.atomic
+def anular_factura(request, factura_id):
+    factura = get_object_or_404(Factura, id=factura_id)
+
+    if factura.estado != 'emitida':
+        return redirect('detalle_factura', factura_id=factura.id)
+
+    # Revertir stock
+    for detalle in factura.detalles.select_related('producto'):
+        if detalle.producto.tipo == 'fisico':
+            inventario = detalle.producto.inventario
+            inventario.stock += detalle.cantidad
+            inventario.save()
+
+    factura.estado = 'anulada'
+    factura.save()
+
+    messages.warning(request, 'Factura anulada')
+    return redirect('detalle_factura', factura_id=factura.id)

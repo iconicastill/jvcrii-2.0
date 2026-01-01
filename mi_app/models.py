@@ -1,4 +1,5 @@
 import uuid
+from decimal import Decimal
 from django.db import models
 
 # Create your models here.
@@ -71,9 +72,74 @@ class Inventario(models.Model):
         related_name='inventario'
     )
 
-    cantidad = models.PositiveIntegerField()
+    stock = models.PositiveIntegerField(default=0)
     actualizado = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.producto.nombre} - {self.cantidad}"
+        return f"{self.producto.nombre} - {self.stock}"
 
+# Nuevo modelo Factura
+
+class Factura(models.Model):
+    ESTADOS = (
+        ('borrador', 'Borrador'),
+        ('emitida', 'Emitida'),
+        ('anulada', 'Anulada'),
+    )
+
+    cliente = models.ForeignKey(
+        Cliente,
+        on_delete=models.PROTECT,
+        related_name='facturas'
+    )
+
+    numero = models.PositiveIntegerField(
+        unique=True,
+        null=True,
+        blank=True
+    )
+
+    estado = models.CharField(
+        max_length=10,
+        choices=ESTADOS,
+        default='borrador'
+    )
+
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    impuesto = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    creada = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Factura {self.numero or 'BORRADOR'}"
+
+
+class FacturaDetalle(models.Model):
+    
+    factura = models.ForeignKey(
+        Factura,
+        on_delete=models.CASCADE,
+        related_name='detalles'
+    )
+
+    producto = models.ForeignKey(
+        Producto,
+        on_delete=models.PROTECT
+    )
+
+    cantidad = models.PositiveIntegerField()
+    precio_unitario = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+    subtotal = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.precio_unitario = self.producto.precio
+        self.subtotal = self.cantidad * self.precio_unitario
+        super().save(*args, **kwargs)

@@ -1,0 +1,74 @@
+{% extends "mi_app/base.html" %}
+
+{% block content %}
+
+<a href="{% url 'listar_facturas' %}">
+    ← Volver a facturas
+</a>
+
+<hr>
+
+<h1>Factura {{ factura.numero }}</h1>
+<p>Cliente: {{ factura.cliente }}</p>
+<p>Estado: {{ factura.estado }}</p>
+
+<hr>
+
+{% if factura.estado == 'borrador' %}
+<h3>Agregar producto</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Agregar</button>
+</form>
+
+{% endif %}
+
+{% if factura.estado == 'emitida' %}
+<form method="post" action="{% url 'anular_factura' factura.id %}">
+    {% csrf_token %}
+    <button type="submit" onclick="return confirm('¿Seguro que deseas anular esta factura?')">
+        Anular factura
+    </button>
+</form>
+{% endif %}
+
+
+
+<h3>Detalle</h3>
+<table border="1">
+    <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio</th>
+        <th>Subtotal</th>
+    </tr>
+    {% for d in detalles %}
+    <tr>
+        <td>{{ d.producto.nombre }}</td>
+        <td>{{ d.cantidad }}</td>
+        <td>{{ d.precio_unitario }}</td>
+        <td>{{ d.subtotal }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4">Sin productos</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<hr>
+
+<p>Subtotal: {{ factura.subtotal }}</p>
+<p>Impuesto (18%): {{ factura.impuesto }}</p>
+<h3>Total: {{ factura.total }}</h3>
+
+{% if factura.estado == 'borrador' %}
+<form method="post" action="{% url 'emitir_factura' factura.id %}">
+    {% csrf_token %}
+    <button type="submit">Emitir factura</button>
+</form>
+{% endif %}
+
+
+{% endblock %}

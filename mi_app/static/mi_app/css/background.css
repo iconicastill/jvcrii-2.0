@@ -5,7 +5,8 @@ html, body {
 
 body {
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 /* Fondo */
@@ -28,7 +29,12 @@ body::after {
     content: "";
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.35);
+    background: rgba(0, 0, 0, 0.55);
     z-index: -1;
 }
-b
+
+/* MODO OSCURO */
+
+body.dark-mode::after {
+    background: rgba(0, 0, 0, 0.85);
+}

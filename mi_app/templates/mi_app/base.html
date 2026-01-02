@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{% static 'mi_app/css/components.css' %}">
     <link rel="stylesheet" href="{% static 'mi_app/css/forms.css' %}">
     <link rel="stylesheet" href="{% static 'mi_app/css/background.css' %}">
+    <link rel="stylesheet" href="{% static 'mi_app/css/navbar.css' %}">
 
     {% block extra_css %}{% endblock %}
 
@@ -40,16 +41,21 @@
     {% endblock %}
 </header>
 
-<nav>
-    {% block nav %}
-    <!-- Navegación visual -->
-    <a href="{% url 'dashboard' %}">Inicio</a>
-    <a href="{% url 'listar_clientes' %}">Clientes</a>
-    <a href="{% url 'listar_productos' %}">Productos</a>
-    <a href="{% url 'crear_factura' %}">Crear Factura</a>
-    <a href="{% url 'listar_borradores' %}">Facturas en Borrador</a>
-    <a href="{% url 'listar_facturas' %}">Facturas Emitidas</a>
-    {% endblock %}
+<nav class="navbar">
+    <button class="menu-toggle" id="menuToggle">
+        ☰
+    </button>
+
+    <div class="nav-links" id="navLinks">
+        {% block nav %}
+        <a href="{% url 'dashboard' %}">Inicio</a>
+        <a href="{% url 'listar_clientes' %}">Clientes</a>
+        <a href="{% url 'listar_productos' %}">Productos</a>
+        <a href="{% url 'crear_factura' %}">Crear Factura</a>
+        <a href="{% url 'listar_borradores' %}">Facturas en Borrador</a>
+        <a href="{% url 'listar_facturas' %}">Facturas Emitidas</a>
+        {% endblock %}
+    </div>
 </nav>
 
 
@@ -72,7 +78,6 @@
             {% endfor %}
         </ul>
     </div>
-    <hr>
     {% endif %}
 
     {% endblock %}

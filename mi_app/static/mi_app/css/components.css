@@ -16,6 +16,12 @@ button:hover {
     background-color: #45a049;
 }
 
+td.monto,
+th.monto {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
 /* MODO OSCURO */
 
 body.dark-mode button, body.dark-mode .btn {

@@ -1,5 +1,9 @@
 body {
     visibility: hidden;
+
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 body {
@@ -43,7 +47,7 @@ nav a.active {
     display: flex;
     gap: 20px;
     padding: 20px;
-    margin: 0 0 50px 0;
+    flex: 1;
 }
 
 .content {
@@ -52,22 +56,19 @@ nav a.active {
 }
 
 aside {
-    /* flex: 1; */
-    /* background-color: #f5f5f5;
-    color: #000000;
-    padding: 20px;
-    border-radius: 8px;
-    margin: 0 0 20vh 0; */
-
-    width: 300px;
+    width: 50%;
     padding: 15px;
-    border-left: 1px solid #ccc;
+    border: 1px solid #ccc;
 
     /* LA CLAVE */
-    height: calc(50vh - 80px);
+    max-height: 160px;
+    overflow-y: auto;
+
+
     overflow-y: auto;
     position: sticky;
     top: 80px; /* altura del header */
+    border-radius: 8px;
 }
 
 footer {
@@ -75,7 +76,7 @@ footer {
     color: #000000;
     text-align: center;
     padding: 10px 0;
-    position: fixed;
+    /* position: fixed; */
     width: 100%;
     bottom: 0;
 }
@@ -98,7 +99,7 @@ body.dark-mode nav {
 }
 
 body.dark-mode aside {
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
     color: #000000;
 }
 
@@ -114,17 +115,53 @@ body.dark-mode footer {
 }
 
 @media(max-width:990px){
+    /* .content {
+        margin-bottom: 15vh;
+    } */
 
 }
 
 @media(max-width:768px){
     .main-container {
-        display: block;
+        display: flex;
+    }
+
+    aside {
+        width: 100%;
+        order: -1; /* SE VA ARRIBA */
+        position: static;
+    }
+
+    /* .content {
+        margin-bottom: 15vh;
+    } */
+
+    .main-container {
+        flex-direction: column;
     }
 }
 
-@media(max-width:450px){
-    .main-container {
-        display: block;
+@media (max-width: 768px) {
+    aside {
+        width: 100%;
+        max-width: 100%;
+        /* overflow-x: hidden; */
+
+        height: auto;         
+        max-height: none;     
+        overflow: visible;    
+        position: static;
+        order: -1;
     }
+
+    .main-container {
+        overflow-x: hidden;
+    }
+}
+
+
+@media(max-width:450px){
+    /* .main-container {
+        display: block;
+    } */
 }

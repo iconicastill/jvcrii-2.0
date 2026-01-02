@@ -11,7 +11,7 @@
             <th>Número</th>
             <th>Cliente</th>
             <th>Estado</th>
-            <th>Total</th>
+            <th class="monto">Total</th>
             <th>Fecha</th>
             <th></th>
         </tr>
@@ -22,7 +22,7 @@
             <td>{{ factura.numero }}</td>
             <td>{{ factura.cliente.nombre }}</td>
             <td>{{ factura.get_estado_display }}</td>
-            <td>${{ factura.total }}</td>
+            <td class="monto">${{ factura.total }}</td>
             <td>{{ factura.creada|date:"d/m/Y H:i" }}</td>
             <td>
                 <a href="{% url 'detalle_factura' factura.id %}">

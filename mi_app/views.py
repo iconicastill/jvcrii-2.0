@@ -22,8 +22,6 @@ def dashboard(request):
         'total_productos': total_productos,
     })
 
-# View para clientes
-
 def listar_clientes(request):
     query = request.GET.get('q', '')
     clientes = Cliente.objects.prefetch_related('direcciones')
@@ -39,6 +37,15 @@ def listar_clientes(request):
     return render(request, 'mi_app/clientes/listar.html', {
         'clientes': clientes,
         'query': query,
+    })
+
+def listar_direcciones(request, cliente_id):
+    cliente = get_object_or_404(Cliente, id=cliente_id)
+    direcciones = cliente.direcciones.all()
+
+    return render(request, 'mi_app/direcciones/listar.html', {
+        'cliente': cliente,
+        'direcciones': direcciones
     })
 
 @login_required
@@ -95,17 +102,6 @@ def eliminar_cliente(request, cliente_id):
 
     return render(request, 'mi_app/clientes/eliminar.html', {
         'cliente': cliente
-    })
-
-# View para direcciones
-
-def listar_direcciones(request, cliente_id):
-    cliente = get_object_or_404(Cliente, id=cliente_id)
-    direcciones = cliente.direcciones.all()
-
-    return render(request, 'mi_app/direcciones/listar.html', {
-        'cliente': cliente,
-        'direcciones': direcciones
     })
 
 @login_required
@@ -166,8 +162,6 @@ def eliminar_direccion(request, direccion_id):
         'direccion': direccion
     })
 
-# View para productos
-
 def listar_productos(request):
     query = request.GET.get('q', '')
 
@@ -213,6 +207,7 @@ def agregar_producto(request):
         'mostrar_inventario': mostrar_inventario,
         'titulo': 'Agregar producto'
     })
+
     
 @login_required
 def editar_producto(request, producto_id):
@@ -264,6 +259,9 @@ def editar_producto(request, producto_id):
         'titulo': 'Editar producto'
     })
 
+    
+
+
 @login_required
 def eliminar_producto(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
@@ -276,7 +274,7 @@ def eliminar_producto(request, producto_id):
         'producto': producto
     })
 
-# View para facturas
+# Nuevo view para listar facturas
 
 @login_required
 def crear_factura(request):

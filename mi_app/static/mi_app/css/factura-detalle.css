@@ -1,0 +1,127 @@
+/* Card principal */
+
+.factura-card-grande {
+    max-width: 800px;
+    width: 100%;
+    flex: 1 1 auto;
+    margin: 20px auto;
+    background: rgba(30,30,30,0.85);
+    padding: 20px;
+    border-radius: 12px;
+    box-sizing: border-box;
+}
+
+/* Header y estado */
+
+.factura-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.estado {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.9em;
+}
+
+.estado.emitida {
+    background: #2e7d32;
+}
+
+.estado.borrador {
+    background: #b58900;
+}
+
+.estado.anulada {
+    background: #8b0000;
+}
+
+/* Información de la factura */
+
+.factura-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.label {
+    color: #aaa;
+    font-size: 0.85em;
+}
+
+.valor {
+    font-weight: 500;
+}
+
+/* Detalle de la factura */
+
+.detalle-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.detalle-table th,
+.detalle-table td {
+    padding: 8px;
+    border-bottom: 1px solid #444;
+}
+
+.monto {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Totales */
+
+.totales {
+    margin-top: 20px;
+}
+
+.totales div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.total-final {
+    font-size: 1.2em;
+    font-weight: 600;
+    border-top: 1px solid #555;
+    padding-top: 8px;
+}
+
+/* Ajustes para los campos del formulario */
+
+.agregar-producto-form {
+    margin-top: 15px;
+    width: 100%;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.form-group.producto {
+    flex: 3 1 0;
+}
+
+.form-group.cantidad {
+    flex: 1 1 0;
+}
+
+.form-group select,
+.form-group input {
+    width: 100%;
+    box-sizing: border-box;
+}

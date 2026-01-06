@@ -1,74 +1,122 @@
 {% extends "mi_app/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'mi_app/css/factura-detalle.css' %}">
+{% endblock %}
 
 {% block content %}
 
-<a href="{% url 'listar_facturas' %}">
-    ← Volver a facturas
-</a>
+<div class="factura-card-grande">
 
-<hr>
+    <div class="factura-header">
+        <h1>Factura {{ factura.numero }}</h1>
+        <span class="estado {{ factura.estado }}">
+            {{ factura.get_estado_display }}
+        </span>
+    </div>
 
-<h1>Factura {{ factura.numero }}</h1>
-<p>Cliente: {{ factura.cliente }}</p>
-<p>Estado: {{ factura.estado }}</p>
+    <div class="factura-info">
+        <div>
+            <span class="label">Cliente</span>
+            <span class="valor">{{ factura.cliente }}</span>
+        </div>
+        <div>
+            <span class="label">Fecha</span>
+            <span class="valor">{{ factura.creada|date:"d/m/Y h:i A" }}</span>
+        </div>
+    </div>
 
-<hr>
+    <hr>
 
-{% if factura.estado == 'borrador' %}
-<h3>Agregar producto</h3>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Agregar</button>
-</form>
+    <h3>Detalle</h3>
 
-{% endif %}
+    <table class="detalle-table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th class="monto">Precio</th>
+                <th class="monto">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in detalles %}
+            <tr>
+                <td>{{ d.producto.nombre }}</td>
+                <td class="cantidad">{{ d.cantidad }}</td>
+                <td class="monto">{{ d.precio_unitario }}</td>
+                <td class="monto">{{ d.subtotal }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">Sin productos</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-{% if factura.estado == 'emitida' %}
-<form method="post" action="{% url 'anular_factura' factura.id %}">
-    {% csrf_token %}
-    <button type="submit" onclick="return confirm('¿Seguro que deseas anular esta factura?')">
-        Anular factura
-    </button>
-</form>
-{% endif %}
+    {% if factura.estado == 'borrador' %}
+    <h3>Agregar producto</h3>
+
+    <form method="post" class="agregar-producto-form">
+        {% csrf_token %}
+
+        <div class="form-group producto">
+            <label for="{{ form.producto.id_for_label }}">Producto</label>
+            {{ form.producto }}
+            {{ form.producto.errors }}
+        </div>
+
+        <div class="form-group cantidad>
+            <label for="{{ form.cantidad.id_for_label }}">Cantidad</label>
+            {{ form.cantidad }}
+            {{ form.cantidad.errors }}
+        </div>
+
+        <button type="submit">Agregar</button>
+    </form>
+    {% endif %}
 
 
+    <div class="totales">
+        <div>
+            <span>Subtotal</span>
+            <span class="monto">{{ factura.subtotal }}</span>
+        </div>
+        <div>
+            <span>Impuesto (18%)</span>
+            <span class="monto">{{ factura.impuesto }}</span>
+        </div>
+        <div class="total-final">
+            <span>Total</span>
+            <span class="monto">{{ factura.total }}</span>
+        </div>
+    </div>
 
-<h3>Detalle</h3>
-<table border="1">
-    <tr>
-        <th>Producto</th>
-        <th>Cantidad</th>
-        <th>Precio</th>
-        <th>Subtotal</th>
-    </tr>
-    {% for d in detalles %}
-    <tr>
-        <td>{{ d.producto.nombre }}</td>
-        <td>{{ d.cantidad }}</td>
-        <td>{{ d.precio_unitario }}</td>
-        <td>{{ d.subtotal }}</td>
-    </tr>
-    {% empty %}
-    <tr>
-        <td colspan="4">Sin productos</td>
-    </tr>
-    {% endfor %}
-</table>
+    {% if factura.estado == 'borrador' %}
+    <form method="post" action="{% url 'emitir_factura' factura.id %}">
+        {% csrf_token %}
+        <button class="emitir">Emitir factura</button>
+    </form>
+    {% endif %}
 
-<hr>
+    {% if factura.estado == 'emitida' %}
+    <div class="factura-acciones">
+        <form method="post" action="{% url 'anular_factura' factura.id %}">
+            {% csrf_token %}
+            <button type="submit"
+                onclick="return confirm('¿Seguro que deseas anular esta factura?')">
+                Anular factura
+            </button>
+        </form>
+    </div>
+    {% endif %}
 
-<p>Subtotal: {{ factura.subtotal }}</p>
-<p>Impuesto (18%): {{ factura.impuesto }}</p>
-<h3>Total: {{ factura.total }}</h3>
+</div>
 
-{% if factura.estado == 'borrador' %}
-<form method="post" action="{% url 'emitir_factura' factura.id %}">
-    {% csrf_token %}
-    <button type="submit">Emitir factura</button>
-</form>
-{% endif %}
-
+    <a href="{% url 'listar_facturas' %}" class="volver">
+        ← Volver a facturas
+    </a>
 
 {% endblock %}

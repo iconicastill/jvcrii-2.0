@@ -59,6 +59,7 @@ aside {
     width: 50%;
     padding: 15px;
     border: 1px solid #ccc;
+    margin: 20px auto;
 
     /* LA CLAVE */
     max-height: 160px;
@@ -154,9 +155,9 @@ body.dark-mode footer {
         order: -1;
     }
 
-    .main-container {
+    /* .main-container {
         overflow-x: hidden;
-    }
+    } */
 }
 
 

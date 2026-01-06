@@ -20,6 +20,19 @@ td.monto,
 th.monto {
     text-align: right;
     font-variant-numeric: tabular-nums;
+    font-weight: 600;
+
+}
+
+td.monto {
+    color: #45a049;
+}
+td.cantidad {
+    text-align: center;
+}
+
+td {
+    padding-left: 15px;
 }
 
 /* MODO OSCURO */

@@ -1,0 +1,44 @@
+.factura-card {
+    background: #2f2f2f;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.fila {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.label {
+    color: #bbb;
+}
+
+.valor {
+    color: #fff;
+}
+
+.valor.monto {
+    text-align: right;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.ver {
+    display: inline-block;
+    margin-top: 8px;
+    color: #4ea1ff;
+}
+
+/* Desktop */
+@media (min-width: 769px) {
+    .tabla-facturas { display: table; }
+    .facturas-cards { display: none; }
+}
+
+/* Móvil */
+@media (max-width: 768px) {
+    .tabla-facturas { display: none; }
+    .facturas-cards { display: block; }
+}

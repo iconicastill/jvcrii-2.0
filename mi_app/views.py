@@ -293,7 +293,6 @@ def crear_factura(request):
         'form': form
     })
 
-
 @login_required
 def listar_borradores(request):
     facturas = Factura.objects.filter(
@@ -328,7 +327,6 @@ def detalle_factura(request, factura_id):
         'detalles': detalles,
         'form': form
     })
-
 
 def recalcular_factura(factura):
     subtotal = factura.detalles.aggregate(

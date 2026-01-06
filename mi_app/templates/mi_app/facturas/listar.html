@@ -5,6 +5,7 @@
 {% block content %}
 <h1>Facturas</h1>
 
+<div class="tabla-facturas">
 <table>
     <thead>
         <tr>
@@ -23,11 +24,9 @@
             <td>{{ factura.cliente.nombre }}</td>
             <td>{{ factura.get_estado_display }}</td>
             <td class="monto">${{ factura.total }}</td>
-            <td>{{ factura.creada|date:"d/m/Y H:i" }}</td>
+            <td class="fecha">{{ factura.creada|date:"d/m/Y H:i" }}</td>
             <td>
-                <a href="{% url 'detalle_factura' factura.id %}">
-                    Ver
-                </a>
+                <a href="{% url 'detalle_factura' factura.id %}">Ver</a>
             </td>
         </tr>
         {% empty %}
@@ -37,6 +36,44 @@
         {% endfor %}
     </tbody>
 </table>
+</div>
+
+<div class="facturas-cards">
+    {% for factura in facturas %}
+    <div class="factura-card">
+        <div class="fila">
+            <span class="label">Número</span>
+            <span class="valor">{{ factura.numero }}</span>
+        </div>
+
+        <div class="fila">
+            <span class="label">Cliente</span>
+            <span class="valor">{{ factura.cliente.nombre }}</span>
+        </div>
+
+        <div class="fila">
+            <span class="label">Estado</span>
+            <span class="valor">{{ factura.get_estado_display }}</span>
+        </div>
+
+        <div class="fila">
+            <span class="label">Total</span>
+            <span class="valor monto">${{ factura.total }}</span>
+        </div>
+
+        <div class="fila">
+            <span class="label">Fecha</span>
+            <span class="valor">{{ factura.creada|date:"d/m/Y H:i" }}</span>
+        </div>
+
+        <a href="{% url 'detalle_factura' factura.id %}" class="ver">
+            Ver factura
+        </a>
+    </div>
+    {% empty %}
+    <p>No hay facturas</p>
+    {% endfor %}
+</div>
 
 <a href="{% url 'dashboard' %}" class="btn">Volver</a>
 

@@ -12,6 +12,16 @@ button, .btn {
     border-radius: 4px;
 }
 
+.btn-borrar {
+    background-color: rgba(0, 0, 0, 0.185);
+    color: rgb(255, 0, 0);
+}
+
+.btn-borrar {
+    background-color: rgba(0, 0, 0, 0.185);
+    color: rgb(255, 0, 0);
+}
+
 button:hover {
     background-color: #45a049;
 }

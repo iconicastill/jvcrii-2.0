@@ -5,6 +5,11 @@
 {% block content %}
 <h1>Facturas</h1>
 
+<a href="{% url 'dashboard' %}" class="btn">← Volver</a>
+
+<hr>
+
+<!-- ===== TABLA (DESKTOP) ===== -->
 <div class="tabla-facturas">
 <table>
     <thead>
@@ -14,19 +19,29 @@
             <th>Estado</th>
             <th class="monto">Total</th>
             <th>Fecha</th>
-            <th></th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
         {% for factura in facturas %}
         <tr>
-            <td>{{ factura.numero }}</td>
+            <td>{{ factura.numero|default:"—" }}</td>
             <td>{{ factura.cliente.nombre }}</td>
             <td>{{ factura.get_estado_display }}</td>
             <td class="monto">${{ factura.total }}</td>
             <td class="fecha">{{ factura.creada|date:"d/m/Y H:i" }}</td>
             <td>
                 <a href="{% url 'detalle_factura' factura.id %}">Ver</a>
+
+                {% if factura.estado == 'borrador' %}
+                    <form method="post"
+                          action="{% url 'borrar_borrador' factura.id %}"
+                          style="display:inline;"
+                          onsubmit="return confirm('¿Seguro que deseas eliminar este borrador?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-borrar">🗑</button>
+                    </form>
+                {% endif %}
             </td>
         </tr>
         {% empty %}
@@ -38,12 +53,13 @@
 </table>
 </div>
 
+<!-- ===== CARDS (MOBILE) ===== -->
 <div class="facturas-cards">
     {% for factura in facturas %}
     <div class="factura-card">
         <div class="fila">
             <span class="label">Número</span>
-            <span class="valor">{{ factura.numero }}</span>
+            <span class="valor">{{ factura.numero|default:"—" }}</span>
         </div>
 
         <div class="fila">
@@ -66,15 +82,26 @@
             <span class="valor">{{ factura.creada|date:"d/m/Y H:i" }}</span>
         </div>
 
-        <a href="{% url 'detalle_factura' factura.id %}" class="ver">
-            Ver factura
-        </a>
+        <div class="acciones">
+            <a href="{% url 'detalle_factura' factura.id %}" class="ver">
+                Ver factura
+            </a>
+
+            {% if factura.estado == 'borrador' %}
+                <form method="post"
+                      action="{% url 'borrar_borrador' factura.id %}"
+                      onsubmit="return confirm('¿Seguro que deseas eliminar este borrador?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-borrar">
+                        🗑 Borrar
+                    </button>
+                </form>
+            {% endif %}
+        </div>
     </div>
     {% empty %}
     <p>No hay facturas</p>
     {% endfor %}
 </div>
-
-<a href="{% url 'dashboard' %}" class="btn">Volver</a>
 
 {% endblock %}

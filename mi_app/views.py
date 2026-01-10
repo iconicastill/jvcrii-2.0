@@ -9,6 +9,8 @@ from decimal import Decimal
 from django.db import transaction
 from django.utils import timezone
 from django.db.models import Max
+from django.views.decorators.http import require_POST
+
 
 
 
@@ -293,15 +295,6 @@ def crear_factura(request):
         'form': form
     })
 
-@login_required
-def listar_borradores(request):
-    facturas = Factura.objects.filter(
-        estado='borrador'
-    ).order_by('-creada')
-
-    return render(request, 'mi_app/facturas/borradores.html', {
-        'facturas': facturas
-    })
 
 @login_required
 def detalle_factura(request, factura_id):
@@ -384,15 +377,7 @@ def generar_numero_factura():
 
     return (ultimo or 0) + 1
 
-@login_required
-def listar_facturas(request):
-    facturas = Factura.objects.exclude(
-        estado='borrador'
-    ).order_by('-creada')
 
-    return render(request, 'mi_app/facturas/listar.html', {
-        'facturas': facturas
-    })
 
 @login_required
 @transaction.atomic
@@ -414,3 +399,30 @@ def anular_factura(request, factura_id):
 
     messages.warning(request, 'Factura anulada')
     return redirect('detalle_factura', factura_id=factura.id)
+
+
+@require_POST
+def borrar_borrador(request, factura_id):
+    factura = get_object_or_404(Factura, id=factura_id)
+
+    if factura.estado != 'BORRADOR':
+        messages.error(request, "Solo los borradores pueden eliminarse.")
+        return redirect('listar_facturas')
+
+    factura.delete()
+    messages.success(request, "Borrador eliminado correctamente.")
+
+    return redirect('listar_facturas')
+
+
+@login_required
+def listar_facturas(request):
+    facturas = (
+        Factura.objects
+        .select_related('cliente')
+        .order_by('-creada')
+    )
+
+    return render(request, 'mi_app/facturas/listar.html', {
+        'facturas': facturas
+    })
